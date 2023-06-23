@@ -5,22 +5,36 @@ from datetime import datetime
 
 def get_data():
     with open('operations.json', 'r', encoding='utf-8') as file:
+        """
+        Читаем данные файла
+        """
         data = json.load(file)
     return data
 
 
 def get_filtered_data(data):
+    """
+    Фильтруем данные
+    :return: отфильтрованные данные
+    """
     data = [x for x in data if "state" in x and x["state"] == "EXECUTED"]
     return data
 
 
 def get_last_values(data, count_last_values):
+    """
+    Получаем последние значения
+    """
     data = sorted(data, key=lambda x: x["date"], reverse=True)
     data = data[:count_last_values]
     return data
 
 
 def encode_bill_info(bill_info):
+    """
+    Скрываем часть номера карты/счета
+    :return: скрытый номер
+    """
     bill_info = bill_info.split()
     bill, info = bill_info[-1], " ".join(bill_info[:-1])
     if len(bill) == 16:
@@ -32,6 +46,9 @@ def encode_bill_info(bill_info):
 
 
 def get_formatted_data(data):
+    """
+    Сортировка по дате
+    """
     formatted_data = []
     for row in data:
         date = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S.%f").strftime("%d.%m.%Y")
